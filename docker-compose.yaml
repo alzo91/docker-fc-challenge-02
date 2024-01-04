@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  app:
+    image: node
+    container_name: app-node
+    networks:
+      - challengenet
+  db-mysql:
+    image: mysql:5.7
+    command: "--innodb-use-native-aio=0"
+    container_name: db-mysql
+    restart: always
+    volumes:
+      - ./db-mysql/data:/var/lib/mysql
+    networks:
+      - challengenet
+  http-nginx:
+    image: nginx:latest
+    container_name: http-nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./http-nginx/config.d:/etc/nginx/config.d
+    networks:
+      - challengenet
+networks:
+  challengenet:
+    driver: brigde
+    
