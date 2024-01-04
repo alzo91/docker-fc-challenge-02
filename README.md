@@ -1,4 +1,4 @@
-###### Handle docker composer
+###### To deal with docker composer
 
 - [x] Running | Executando 
 1. docker-compose up -d --build
