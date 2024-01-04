@@ -1,30 +1,52 @@
 version: '3'
 
 services:
-  app:
+  app-node:
+    build: 
+      context: ./app-node
+      dockerfile: Dockerfile
     image: node
     container_name: app-node
     networks:
       - challengenet
+    tty: true
+    depends_on:
+      - db-mysql
   db-mysql:
-    image: mysql:5.7
+    build: 
+      context: ./db-mysql
+      dockerfile: Dockerfile
     command: "--innodb-use-native-aio=0"
     container_name: db-mysql
     restart: always
+    tty: true
     volumes:
       - ./db-mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nodeappdb
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3306:3306
     networks:
       - challengenet
   http-nginx:
-    image: nginx:latest
+    build: 
+      context: ./http
+      dockerfile: Dockerfile
+      args:
+        - t=zotarelli/http:latest
+      labels:
+        - name=Alisson Lucas Zotarelli de Olivera
+        - description=nginx
     container_name: http-nginx
+    tty: true
     ports:
       - 8080:80
-    volumes:
-      - ./http-nginx/config.d:/etc/nginx/config.d
     networks:
       - challengenet
+ 
+    depends_on:
+      - app-node
 networks:
   challengenet:
-    driver: brigde
     
