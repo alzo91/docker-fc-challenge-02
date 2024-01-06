@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     image: node
     container_name: app-node
-    entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 30s docker-entrypoint.sh
+    entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 30s node index.js
     networks:
       - challengenet
     tty: true
