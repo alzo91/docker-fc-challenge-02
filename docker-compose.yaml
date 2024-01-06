@@ -1,19 +1,20 @@
-version: '3'
+version: "3"
 
 services:
   app-node:
-    build: 
+    build:
       context: ./app-node
       dockerfile: Dockerfile
     image: node
     container_name: app-node
+    entrypoint: dockerize -wait tcp://db-mysql:3306 -timeout 30s docker-entrypoint.sh
     networks:
       - challengenet
     tty: true
     depends_on:
       - db-mysql
   db-mysql:
-    build: 
+    build:
       context: ./db-mysql
       dockerfile: Dockerfile
     command: "--innodb-use-native-aio=0"
@@ -30,7 +31,7 @@ services:
     networks:
       - challengenet
   http-nginx:
-    build: 
+    build:
       context: ./http
       dockerfile: Dockerfile
       args:
@@ -44,9 +45,8 @@ services:
       - 8080:80
     networks:
       - challengenet
- 
+
     depends_on:
       - app-node
 networks:
   challengenet:
-    
